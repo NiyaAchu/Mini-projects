@@ -30,12 +30,16 @@ public class ClientHandler implements Runnable{
 
 
     @Override
-    pubic void run(){
+    public void run(){
         String messageFromClient;
 
         while(socket.isConnected()){
             try {
                 messageFromClient = bufferedReader.readLine();  //blocking operation
+                if (messageFromClient == null){
+                    closeEverything(socket, bufferedReader, bufferedWriter);
+                    break;
+                }
                 broadcastMessage(messageFromClient);
 
             } catch (Exception e) {
@@ -54,12 +58,12 @@ public class ClientHandler implements Runnable{
                     clientHandler.bufferedWriter.flush();
                 }
             }catch(IOException e){
-                closeEverything(socket, bufferedReader, bufferedWriter);
+                clientHandler.closeEverything(clientHandler.socket, clientHandler.bufferedReader, clientHandler.bufferedWriter);
 
             }
 
         }
-    }
+    } 
 
     public void removeClientHandler(){
         clientHandlers.remove(this);

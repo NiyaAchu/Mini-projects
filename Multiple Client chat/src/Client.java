@@ -47,13 +47,22 @@ public class Client {
             @Override 
             public void run(){
                 String msgFromGroupChat;
-                try {
+                while (socket.isConnected()){
+                    try {
                     msgFromGroupChat = bufferedReader.readLine();
+                    if (msgFromGroupChat == null){
+                        closeEverything(socket, bufferedReader, bufferedWriter);
+                        break;
+                    }
                     System.out.println(msgFromGroupChat);
                     
-                } catch (IOException e) {
-                    closeEverything(socket, bufferedReader,bufferedWriter);
+                    } catch (IOException e) {
+                        closeEverything(socket, bufferedReader,bufferedWriter);
+                        break;
+                    }
+
                 }
+                
 
             }
         }).start();
